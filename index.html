@@ -1,14 +1,88 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#17231f">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Cotizador">
+<meta name="theme-color" content="#17231f">
 <title>Cotizador de Pintura</title>
 <style>
-:root{--bg:#f3f5f3;--card:#fff;--ink:#18231f;--muted:#66736d;--line:#dfe6e1;--accent:#176b4a;--soft:#eaf4ee;--danger:#a33b32}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding-bottom:96px}.top{background:#17231f;color:white;padding:24px 18px 20px}.top small{color:#b9c9c0;letter-spacing:.08em;text-transform:uppercase;font-size:11px}.top h1{font-size:25px;margin:6px 0}.top p{color:#cbd7d0;margin:0;font-size:13px}.wrap{max-width:850px;margin:auto;padding:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:15px;margin:12px 0;box-shadow:0 2px 8px #14251b08}.card h2{font-size:17px;margin:0 0 12px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.field{min-width:0}.field label{display:block;font-size:12px;color:var(--muted);margin:0 0 5px}.field input,.field select{width:100%;min-width:0;padding:11px 10px;border:1px solid #cfd9d2;border-radius:9px;background:white;color:var(--ink);font:inherit}.field input:focus,.field select:focus{outline:2px solid #9ccbb1;border-color:var(--accent)}.row{display:flex;align-items:end;gap:8px}.row .field{flex:1}.btn{border:0;border-radius:10px;padding:11px 14px;background:var(--accent);color:white;font-weight:650;font-size:14px}.btn.secondary{background:var(--soft);color:var(--accent)}.btn.danger{background:#f9ecea;color:var(--danger);padding:8px 10px}.btn.full{width:100%;margin-top:10px}.room{border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0}.roomhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}.roomhead strong{font-size:15px}.wallrow{display:grid;grid-template-columns:1fr 1fr 78px 34px;gap:6px;align-items:end;margin:8px 0}.wallrow .field label{font-size:11px}.wallrow input,.wallrow select{padding:9px 7px;font-size:14px}.wallrow button{height:38px}.subhead{font-size:13px;font-weight:700;margin:14px 0 7px}.hint{font-size:12px;color:var(--muted);line-height:1.45}.metric{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}.metric:last-child{border:0}.metric span{color:var(--muted)}.total{font-size:25px;font-weight:800;color:var(--accent)}.pill{display:inline-block;background:var(--soft);color:var(--accent);padding:4px 8px;border-radius:20px;font-size:11px;font-weight:700}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actions .btn{width:100%}details summary{font-weight:650;cursor:pointer;padding:5px 0}.hidden{display:none}.notice{background:#fff8e8;border:1px solid #f0dfb8;color:#70551e;border-radius:10px;padding:10px;font-size:12px;line-height:1.45}.smallnum{font-variant-numeric:tabular-nums}@media(max-width:440px){.grid{gap:8px}.card{padding:13px}.wallrow{grid-template-columns:1fr 1fr 70px 32px;gap:4px}.wallrow input{padding:8px 5px}.actions{grid-template-columns:1fr}.top h1{font-size:23px}}
-.totalbar{position:fixed;left:0;right:0;bottom:0;z-index:600;background:#17231f;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 18px calc(12px + env(safe-area-inset-bottom));box-shadow:0 -6px 18px rgba(0,0,0,.28)}.totalbar .lbl{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#b9c9c0}.totalbar .net{font-size:12px;color:#8fb2a2;margin-top:2px}.totalbar strong{font-size:21px;color:#8fe0b0;white-space:nowrap}.print-doc{display:none}
+:root{--bg:#f3f5f3;--card:#fff;--ink:#18231f;--muted:#66736d;--line:#dfe6e1;--accent:#176b4a;--soft:#eaf4ee;--danger:#a33b32}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding-bottom:96px}
+[hidden]{display:none!important}
+.top{background:#17231f;color:white;padding:20px 18px 14px}
+.top small{color:#b9c9c0;letter-spacing:.08em;text-transform:uppercase;font-size:11px}
+.top h1{font-size:22px;margin:4px 0}
+.top p{color:#cbd7d0;margin:0;font-size:12.5px}
+.wrap{max-width:850px;margin:auto;padding:12px}
+.tabs{position:sticky;top:0;z-index:400;background:#f3f5f3;display:flex;gap:6px;overflow-x:auto;padding:10px 14px;border-bottom:1px solid var(--line);-webkit-overflow-scrolling:touch}
+.tabs button{flex:0 0 auto;border:1px solid var(--line);background:white;border-radius:99px;padding:9px 14px;font-size:13px;font-weight:650;color:var(--muted);cursor:pointer}
+.tabs button.on{background:var(--accent);border-color:var(--accent);color:white}
+.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:15px;margin:12px 0;box-shadow:0 2px 8px #14251b08}
+.card h2{font-size:17px;margin:0 0 12px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.field{min-width:0}
+.field label{display:block;font-size:12px;color:var(--muted);margin:0 0 5px}
+.field input,.field select{width:100%;min-width:0;padding:11px 10px;border:1px solid #cfd9d2;border-radius:9px;background:white;color:var(--ink);font:inherit}
+.field input:focus,.field select:focus{outline:2px solid #9ccbb1;border-color:var(--accent)}
+.row{display:flex;align-items:end;gap:8px}
+.row .field{flex:1}
+.btn{border:0;border-radius:10px;padding:11px 14px;background:var(--accent);color:white;font-weight:650;font-size:14px;cursor:pointer}
+.btn.secondary{background:var(--soft);color:var(--accent)}
+.btn.danger{background:#f9ecea;color:var(--danger);padding:8px 10px}
+.btn.full{width:100%;margin-top:10px}
+.room{border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0}
+.roomhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+.roomhead strong{font-size:15px}
+.wallrow{display:grid;grid-template-columns:1fr 1fr 78px 34px;gap:6px;align-items:end;margin:8px 0}
+.wallrow .field label{font-size:11px}
+.wallrow input,.wallrow select{padding:9px 7px;font-size:14px}
+.wallrow button{height:38px}
+.subhead{font-size:13px;font-weight:700;margin:14px 0 7px}
+.hint{font-size:12.5px;color:var(--muted);margin:8px 0}
+.notice{background:#fdf6e3;border:1px solid #eadfb8;color:#7a6520;border-radius:10px;padding:10px;font-size:13px;margin-top:10px}
+.metric{display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid var(--line);padding:9px 2px;font-size:14px}
+.metric:first-of-type{border-top:0}
+.total{color:var(--accent);font-size:22px;font-weight:800}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.badge{display:inline-block;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;white-space:nowrap}
+.badge.borrador{background:#eef1ef;color:#5a6a62}
+.badge.confirmada{background:#eaf4ee;color:#176b4a}
+.badge.completada{background:#e8effa;color:#2c5aa0}
+.badge.cancelada{background:#f9ecea;color:#a33b32}
+.qitem{border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0;background:white}
+.qitem .qh2{display:flex;justify-content:space-between;gap:8px;align-items:start;margin-bottom:6px}
+.qitem .qh2 strong{font-size:15px}
+.qitem .sub{font-size:12.5px;color:var(--muted)}
+.qitem .qa{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.qitem select{padding:7px 8px;border:1px solid #cfd9d2;border-radius:8px;font-size:12px;background:white}
+.qitem .qa .btn{padding:7px 10px;font-size:12px}
+table.mini{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0}
+table.mini th,table.mini td{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}
+table.mini th{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+table.mini .r{text-align:right}
+.statgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.stat{background:white;border:1px solid var(--line);border-radius:12px;padding:12px}
+.stat span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.stat strong{display:block;font-size:19px;margin-top:4px}
+.cal{border:1px solid var(--line);border-radius:12px;background:white;padding:10px}
+.calhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-weight:700;font-size:15px}
+.calhead .btn{padding:6px 12px;font-size:13px}
+.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.calgrid .dow{font-size:10px;color:var(--muted);text-align:center;padding:4px 0;font-weight:700}
+.cday{min-height:46px;border:1px solid #eef2ef;border-radius:8px;padding:3px 4px;font-size:11px;position:relative}
+.cday.today{border-color:var(--accent);background:var(--soft)}
+.cday.dim{opacity:.35}
+.cday .ev{position:absolute;bottom:3px;left:0;right:0;text-align:center}
+.cday .ev i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);margin:0 1px}
+.totalbar{position:fixed;left:0;right:0;bottom:0;z-index:600;background:#17231f;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 18px calc(12px + env(safe-area-inset-bottom));box-shadow:0 -6px 18px rgba(0,0,0,.28)}
+.totalbar .lbl{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#b9c9c0}
+.totalbar .net{font-size:12px;color:#8fb2a2;margin-top:2px}
+.totalbar strong{font-size:21px;color:#8fe0b0;white-space:nowrap}
+.print-doc{display:none}
 @page{margin:14mm}
-@media print{body{background:white;padding:0}.totalbar,header.top,.card,footer,.btn,details{display:none!important}.print-doc{display:block!important;color:#111;font:12.5px/1.45 -apple-system,"Segoe UI",Arial,sans-serif}.qh{border-bottom:2px solid #111;padding-bottom:8px;margin-bottom:10px}.qh-title{font-size:19px;font-weight:800}.qh-sub{font-size:12px;color:#555;margin-top:2px}.print-doc table{width:100%;border-collapse:collapse;margin:8px 0 14px}.print-doc th,.print-doc td{border:1px solid #bbb;padding:5px 7px;font-size:11.5px;text-align:left;vertical-align:top}.print-doc th{background:#efefef;font-weight:700}.print-doc .r{text-align:right}.print-doc .grp{background:#e6efe9;font-weight:700}.print-doc .b td{font-weight:700}.print-doc .grand td{font-weight:800;font-size:13px;border-top:2px solid #111;background:#f4f4f4}.print-doc .qs{font-weight:800;margin:12px 0 4px;font-size:12.5px;text-transform:uppercase;letter-spacing:.03em}.print-doc .meta td{border:none;padding:2px 0;font-size:11.5px}.print-doc .note{font-size:11px;color:#444;margin:10px 0}.print-doc .sigs{display:flex;gap:40px;margin-top:36px;font-size:11px}.print-doc .sigs>div{flex:1}.print-doc .line{border-bottom:1px solid #111;height:34px;margin-bottom:4px}.print-doc .muted{color:#777}}
+@media print{body{background:white;padding:0}.totalbar,header.top,.tabs,.card,footer,.btn,details{display:none!important}.print-doc{display:block!important;color:#111;font:12.5px/1.45 -apple-system,"Segoe UI",Arial,sans-serif}.qh{border-bottom:2px solid #111;padding-bottom:8px;margin-bottom:10px}.qh-title{font-size:19px;font-weight:800}.qh-sub{font-size:12px;color:#555;margin-top:2px}.print-doc table{width:100%;border-collapse:collapse;margin:8px 0 14px}.print-doc th,.print-doc td{border:1px solid #bbb;padding:5px 7px;font-size:11.5px;text-align:left;vertical-align:top}.print-doc th{background:#efefef;font-weight:700}.print-doc .r{text-align:right}.print-doc .grp{background:#e6efe9;font-weight:700}.print-doc .b td{font-weight:700}.print-doc .grand td{font-weight:800;font-size:13px;border-top:2px solid #111;background:#f4f4f4}.print-doc .qs{font-weight:800;margin:12px 0 4px;font-size:12.5px;text-transform:uppercase;letter-spacing:.03em}.print-doc .meta td{border:none;padding:2px 0;font-size:11.5px}.print-doc .note{font-size:11px;color:#444;margin:10px 0}.print-doc .sigs{display:flex;gap:40px;margin-top:36px;font-size:11px}.print-doc .sigs>div{flex:1}.print-doc .line{border-bottom:1px solid #111;height:34px;margin-bottom:4px}.print-doc .muted{color:#777}}
 </style></head>
 <body>
 <div id="lock" style="position:fixed;inset:0;z-index:9999;background:#17231f;display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;padding:24px">
@@ -27,7 +101,6 @@
   let setupMode=false,attempts=0;
   function show(mode){setupMode=mode==='setup';lock.style.display='flex';title.textContent=setupMode?'Crea tu PIN':'Cotizador de pintura';hint.textContent=setupMode?'Este código será tu llave de acceso. Mínimo 4 dígitos o caracteres.':'Introduce tu PIN para entrar.';msg.textContent='';pinIn.value='';pinIn.focus()}
   function unlock(){lock.style.display='none';sessionStorage.setItem('cotizador_unlocked','1')}
-  function ok(){unlock()}
   function err(t){msg.textContent=t;pinIn.value='';pinIn.focus()}
   document.getElementById('lockBtn').onclick=()=>{
     const v=pinIn.value.trim();
@@ -40,69 +113,474 @@
   pinIn.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('lockBtn').click()});
   document.getElementById('lockReset').onclick=()=>{
     if(setupMode)return;
-    if(confirm('¿Restablecer el PIN? Esto también borrará la cotización guardada en este dispositivo.')){localStorage.removeItem('cotizador_pin');localStorage.removeItem('cotizador_pintura_current');show('setup')}
+    if(confirm('¿Restablecer el PIN? Esto también borrará TODOS los datos guardados (cotizaciones, pagos, empleados).')){localStorage.removeItem('cotizador_pin');localStorage.removeItem('cotizador_pintura_current');localStorage.removeItem('cp_db_v1');show('setup')}
   };
   if(!localStorage.getItem('cotizador_pin'))show('setup');else if(!sessionStorage.getItem('cotizador_unlocked'))show('lock');
 })();
 </script>
-<header class="top"><div class="wrap"><small>Herramienta de trabajo</small><h1>Cotizador de pintura</h1><p>Mide paredes, descuenta puertas y ventanas y calcula la mano de obra en RD$.</p></div></header>
+<header class="top"><div class="wrap"><small>Herramienta de trabajo</small><h1>Cotizador de pintura</h1><p>Mediciones, agenda, pagos, empleados y pintura requerida — todo en RD$.</p></div></header>
+<nav class="tabs" id="tabs">
+  <button data-v="cotizador" class="on">Cotizador</button>
+  <button data-v="historial">Historial</button>
+  <button data-v="agenda">Agenda</button>
+  <button data-v="pagos">Pagos</button>
+  <button data-v="empleados">Empleados</button>
+  <button data-v="resumen">Dashboard</button>
+</nav>
 <main class="wrap">
-<section class="card"><h2>Datos del cliente y proyecto</h2><div class="grid">
-<div class="field"><label>Cliente</label><input id="client" placeholder="Nombre del cliente"></div><div class="field"><label>Ubicación</label><input id="location" placeholder="Ej. Bonao"></div>
+
+<!-- ============ VISTA COTIZADOR ============ -->
+<section id="view-cotizador">
+<section class="card"><h2>Datos del cliente y proyecto</h2>
+<div id="currentInfo" hidden style="background:var(--soft);border-radius:10px;padding:10px;margin-bottom:10px"><div class="grid">
+<div class="field"><label>Folio</label><input id="qFolio" readonly></div>
+<div class="field"><label>Estado del trabajo</label><select id="qStatus" onchange="setStatus(this.value)"><option value="borrador">Borrador</option><option value="confirmada">Confirmada</option><option value="completada">Completada</option><option value="cancelada">Cancelada</option></select></div>
+</div></div>
+<div class="grid">
+<div class="field"><label>Cliente</label><input id="client" placeholder="Nombre del cliente"></div><div class="field"><label>Dirección / Ubicación</label><input id="location" placeholder="Ej. Bonao, Calle 1"></div>
 <div class="field"><label>Proyecto</label><input id="project" value="Pintura de vivienda"></div><div class="field"><label>Fecha</label><input id="date" type="date"></div>
-</div><p class="hint">La cotización calcula mano de obra. Por defecto, los materiales los suministra el cliente.</p></section>
+</div><p class="hint">La cotización calcula mano de obra. Por defecto, los materiales los suministra el cliente. Se guarda automáticamente en este dispositivo.</p></section>
+
 <section class="card"><h2>1. Medición de paredes</h2><div class="grid"><div class="field"><label>Unidad para las medidas nuevas</label><select id="unit"><option value="m">Metros (m)</option><option value="ft">Pies (ft)</option><option value="cm">Centímetros (cm)</option></select></div><div class="field"><label>Nombre del área</label><input id="roomName" placeholder="Ej. Sala, habitación 1"></div></div>
 <button class="btn full" id="addRoom">+ Agregar área / habitación</button><div id="rooms"></div><div class="notice">Introduce el ancho horizontal y la altura vertical de cada pared. Puedes usar una unidad distinta en cada pared. El sistema convierte todo a metros cuadrados.</div></section>
+
 <section class="card"><h2>2. Puertas y ventanas (descuento)</h2><p class="hint">Registra aquí las aberturas para restar su superficie de las paredes. Se descuenta el área completa de cada abertura.</p><div class="grid"><div class="field"><label>Tipo</label><select id="openingType"><option value="Puerta">Puerta</option><option value="Ventana">Ventana</option><option value="Otra abertura">Otra abertura</option></select></div><div class="field"><label>Unidad</label><select id="openingUnit"><option value="m">Metros (m)</option><option value="ft">Pies (ft)</option><option value="cm">Centímetros (cm)</option></select></div><div class="field"><label>Ancho</label><input id="openingW" type="number" min="0" step="any" placeholder="0.90"></div><div class="field"><label>Alto</label><input id="openingH" type="number" min="0" step="any" placeholder="2.10"></div><div class="field"><label>Cantidad</label><input id="openingQty" type="number" min="1" step="1" value="1"></div></div><button class="btn secondary full" id="addOpening">+ Agregar abertura</button><div id="openingsList"></div></section>
+
 <section class="card"><h2>3. Techos (opcional)</h2><p class="hint">Agrega el ancho y largo de cada techo. Se calcula por separado.</p><div class="grid"><div class="field"><label>Nombre del techo</label><input id="ceilingName" placeholder="Ej. Techo de sala"></div><div class="field"><label>Unidad</label><select id="ceilingUnit"><option value="m">Metros (m)</option><option value="ft">Pies (ft)</option><option value="cm">Centímetros (cm)</option></select></div><div class="field"><label>Ancho</label><input id="ceilingW" type="number" min="0" step="any"></div><div class="field"><label>Largo</label><input id="ceilingL" type="number" min="0" step="any"></div></div><button class="btn secondary full" id="addCeiling">+ Agregar techo</button><div id="ceilingsList"></div></section>
+
 <section class="card"><h2>4. Precios de mano de obra</h2><div class="grid"><div class="field"><label>Paredes (RD$/m²)</label><input id="wallPrice" type="number" min="0" step="any" value="100"></div><div class="field"><label>Techos (RD$/m²)</label><input id="ceilingPrice" type="number" min="0" step="any" value="85"></div><div class="field"><label>Puertas (RD$/unidad) — opcional</label><input id="doorPrice" type="number" min="0" step="any" value="0"></div><div class="field"><label>Ventanas (RD$/unidad) — opcional</label><input id="windowPrice" type="number" min="0" step="any" value="0"></div></div><p class="hint">Los precios por puerta y ventana son adicionales opcionales. Si solo descuentas sus áreas y pintas la pared alrededor, déjalos en RD$0.</p>
 <div class="subhead">Otros trabajos / cargos</div><div class="grid"><div class="field"><label>Descripción</label><input id="extraName" placeholder="Ej. Preparación / lijado"></div><div class="field"><label>Importe (RD$)</label><input id="extraPrice" type="number" min="0" step="any" placeholder="0"></div></div><button class="btn secondary full" id="addExtra">+ Agregar cargo</button><div id="extrasList"></div></section>
-<section class="card" id="summary"><h2>5. Resumen de cotización</h2><div class="metric"><span>Área bruta de paredes</span><strong id="grossArea">0.00 m²</strong></div><div class="metric"><span>Área de puertas y ventanas descontada</span><strong id="deductArea">0.00 m²</strong></div><div class="metric"><span>Área neta de paredes</span><strong id="netArea">0.00 m²</strong></div><div class="metric"><span>Área de techos</span><strong id="ceilingArea">0.00 m²</strong></div><div class="metric"><span>Mano de obra paredes</span><strong id="wallCost">RD$0</strong></div><div class="metric"><span>Mano de obra techos</span><strong id="ceilingCost">RD$0</strong></div><div class="metric"><span>Puertas y ventanas (adicional)</span><strong id="openingCost">RD$0</strong></div><div class="metric"><span>Otros cargos</span><strong id="extraCost">RD$0</strong></div><div class="metric" style="padding-top:14px"><strong>TOTAL MANO DE OBRA</strong><strong class="total" id="grandTotal">RD$0</strong></div><p class="hint" id="warning"></p></section>
+
+<section class="card"><h2>5. Plan de trabajo (días y empleados)</h2>
+<div class="grid"><div class="field"><label>Pintores asignados</label><input id="schedPainters" type="number" min="1" step="1" value="2"></div>
+<div class="field"><label>Rendimiento por pintor (m²/día)</label><input id="schedProd" type="number" min="1" step="any" value="30"></div>
+<div class="field"><label>Pago diario por pintor (RD$)</label><input id="schedRate" type="number" min="0" step="any" value="1500"></div>
+<div class="field"><label>Fecha de inicio</label><input id="schedStart" type="date"></div></div>
+<div class="field" style="margin-top:8px"><label style="display:flex;gap:8px;align-items:center;font-size:13px"><input id="schedSun" type="checkbox" style="width:auto"> Incluir domingos como laborables</label></div>
+<div class="metric"><span>Días laborables estimados</span><strong id="schedDays">—</strong></div>
+<div class="metric"><span>Fecha estimada de finalización</span><strong id="schedEnd">—</strong></div>
+<div class="metric"><span>Costo interno de mano de obra (pintores)</span><strong id="schedCost">RD$0</strong></div>
+<p class="hint">Cada pintor cubre ~25–35 m² por día (paredes + techos, con dos manos). El costo interno es informativo: días × pintores × pago diario.</p></section>
+
+<section class="card"><h2>6. Calculadora de pintura requerida</h2>
+<div class="grid"><div class="field"><label>Área a pintar (m²)</label><input id="paintArea" type="number" min="0" step="any"></div>
+<div class="field"><label>Manos (capas)</label><input id="paintCoats" type="number" min="1" step="1" value="2"></div>
+<div class="field"><label>Rendimiento por galón (m²·manos)</label><input id="paintYield" type="number" min="1" step="any" value="30"></div>
+<div class="field"><label>Precio cubeta 5 gal (RD$) — opcional</label><input id="paintPrice" type="number" min="0" step="any" placeholder="Ej. 3800"></div></div>
+<button class="btn secondary full" id="paintFromQuote">Usar el área de esta cotización (paredes netas + techos)</button>
+<div class="metric"><span>Galones necesarios</span><strong id="paintGallons">—</strong></div>
+<div class="metric"><span>Cubetas de 5 galones (18.9 L)</span><strong id="paintBuckets">—</strong></div>
+<div class="metric"><span>Litros totales</span><strong id="paintLiters">—</strong></div>
+<div class="metric"><span>Costo estimado de la pintura</span><strong id="paintCost">RD$0</strong></div>
+<p class="hint">Cubeta estándar = 5 galones = 18.9 L. A dos manos una cubeta cubre 60–90 m² (24–36 m²·manos por galón). Ajusta el rendimiento según la marca y la porosidad de la pared.</p>
+<div class="subhead">Cobro por la consulta de pintura</div>
+<div class="grid"><div class="field"><label>Importe de la consulta (RD$)</label><input id="paintFee" type="number" min="0" step="any" placeholder="Ej. 500"></div></div>
+<button class="btn full" id="paintAddFee">Cobrar consulta — agregar a la cotización</button></section>
+
+<section class="card" id="summary"><h2>7. Resumen de cotización</h2><div class="metric"><span>Área bruta de paredes</span><strong id="grossArea">0.00 m²</strong></div><div class="metric"><span>Área de puertas y ventanas descontada</span><strong id="deductArea">0.00 m²</strong></div><div class="metric"><span>Área neta de paredes</span><strong id="netArea">0.00 m²</strong></div><div class="metric"><span>Área de techos</span><strong id="ceilingArea">0.00 m²</strong></div><div class="metric"><span>Mano de obra paredes</span><strong id="wallCost">RD$0</strong></div><div class="metric"><span>Mano de obra techos</span><strong id="ceilingCost">RD$0</strong></div><div class="metric"><span>Puertas y ventanas (adicional)</span><strong id="openingCost">RD$0</strong></div><div class="metric"><span>Otros cargos (incluye consultas)</span><strong id="extraCost">RD$0</strong></div><div class="metric" style="padding-top:14px"><strong>TOTAL MANO DE OBRA</strong><strong class="total" id="grandTotal">RD$0</strong></div><p class="hint" id="warning"></p></section>
+
+<section class="card no-print" id="cardPayments" hidden><h2>Cobros de este trabajo</h2>
+<div class="metric"><span>Total cotizado</span><strong id="payTotal">RD$0</strong></div>
+<div class="metric"><span>Pagado por el cliente</span><strong id="payPaid" style="color:var(--accent)">RD$0</strong></div>
+<div class="metric"><span>Pendiente de cobro</span><strong id="payPending" style="color:var(--danger)">RD$0</strong></div>
+<div class="grid" style="margin-top:10px"><div class="field"><label>Importe (RD$)</label><input id="payAmt" type="number" min="0" step="any"></div><div class="field"><label>Fecha</label><input id="payDate" type="date"></div><div class="field"><label>Método</label><select id="payMethod"><option>Efectivo</option><option>Transferencia</option><option>Cheque</option><option>Otro</option></select></div><div class="field"><label>Nota</label><input id="payNote" placeholder="Ej. adelanto 50%"></div></div>
+<button class="btn secondary full" id="addPay">+ Registrar pago</button>
+<div id="payList"></div></section>
+
+<section class="card no-print"><h2>Guardar y entregar</h2><div class="actions">
+<button class="btn" id="saveQuoteBtn">Guardar cotización del cliente</button>
+<button class="btn secondary" id="printBtn">Imprimir / Guardar PDF</button>
+<button class="btn danger" id="resetBtn">Nueva cotización</button>
+</div><p class="hint">Se guarda automáticamente al escribir. "Guardar cotización del cliente" lo registra en el <strong>Historial</strong> con folio; luego puedes registrar pagos, programar la agenda y verlo en el dashboard.</p></section>
+</section>
+
+<!-- ============ VISTA HISTORIAL ============ -->
+<section id="view-historial" hidden>
+<section class="card"><h2>Historial de cotizaciones</h2>
+<div class="grid"><div class="field"><label>Filtrar por estado</label><select id="histFilter" onchange="renderHistorial()"><option value="">Todos</option><option value="borrador">Borrador</option><option value="confirmada">Confirmada</option><option value="completada">Completada</option><option value="cancelada">Cancelada</option></select></div><div class="field"><label>Buscar cliente</label><input id="histSearch" oninput="renderHistorial()" placeholder="Nombre..."></div></div>
+<div id="histList"></div></section>
+</section>
+
+<!-- ============ VISTA AGENDA ============ -->
+<section id="view-agenda" hidden>
+<section class="card"><h2>Agenda de trabajos</h2>
+<div class="cal"><div class="calhead"><button class="btn secondary" onclick="calMove(-1)">‹</button><span id="calTitle"></span><button class="btn secondary" onclick="calMove(1)">›</button></div><div class="calgrid" id="calGrid"></div></div>
+<p class="hint">Los puntos indican días de trabajo programado (trabajos confirmados o en curso). Programa cada trabajo desde el Cotizador → "Plan de trabajo" y guarda la cotización.</p>
+<div class="subhead">Próximos trabajos</div><div id="agendaList"></div></section>
+</section>
+
+<!-- ============ VISTA PAGOS ============ -->
+<section id="view-pagos" hidden>
+<section class="card"><h2>Registrar cobro (cliente)</h2>
+<div class="grid"><div class="field"><label>Cotización</label><select id="colQuote"></select></div><div class="field"><label>Importe (RD$)</label><input id="colAmt" type="number" min="0" step="any"></div>
+<div class="field"><label>Fecha</label><input id="colDate" type="date"></div><div class="field"><label>Método</label><select id="colMethod"><option>Efectivo</option><option>Transferencia</option><option>Cheque</option><option>Otro</option></select></div></div>
+<div class="field" style="margin-top:8px"><label>Nota</label><input id="colNote" placeholder="Ej. segundo pago al 60%"></div>
+<button class="btn full" id="addCol">+ Registrar cobro</button>
+<div class="metric" style="margin-top:10px"><span>Total cobrado a clientes</span><strong id="colTotal" style="color:var(--accent)">RD$0</strong></div>
+<div class="subhead">Últimos cobros</div><div id="colList"></div></section>
+<section class="card"><h2>Registrar pago a empleado</h2>
+<div class="grid"><div class="field"><label>Empleado</label><select id="epEmp"></select></div><div class="field"><label>Importe (RD$)</label><input id="epAmt" type="number" min="0" step="any"></div>
+<div class="field"><label>Fecha</label><input id="epDate" type="date"></div><div class="field"><label>Trabajo (opcional)</label><select id="epQuote"></select></div></div>
+<div class="field" style="margin-top:8px"><label>Nota</label><input id="epNote" placeholder="Ej. adelanto semanal"></div>
+<button class="btn full" id="addEp">+ Registrar pago</button>
+<div class="metric" style="margin-top:10px"><span>Total pagado a empleados</span><strong id="epTotal" style="color:var(--danger)">RD$0</strong></div>
+<div class="subhead">Últimos pagos</div><div id="epList"></div></section>
+</section>
+
+<!-- ============ VISTA EMPLEADOS ============ -->
+<section id="view-empleados" hidden>
+<section class="card"><h2>Equipo de trabajo</h2>
+<div class="grid"><div class="field"><label>Nombre del empleado</label><input id="empName" placeholder="Ej. José Pérez"></div><div class="field"><label>Pago por día (RD$)</label><input id="empRate" type="number" min="0" step="any" value="1500"></div></div>
+<div class="field" style="margin-top:8px"><label>Teléfono (opcional)</label><input id="empPhone" placeholder="829-000-0000"></div>
+<button class="btn full" id="addEmp">+ Agregar empleado</button>
+<div id="empList"></div></section>
+</section>
+
+<!-- ============ VISTA DASHBOARD ============ -->
+<section id="view-resumen" hidden>
+<section class="card"><h2>Dashboard del negocio</h2>
+<div class="statgrid">
+<div class="stat"><span>Cotizaciones activas (borrador)</span><strong id="dDraft">0</strong></div>
+<div class="stat"><span>Confirmadas</span><strong id="dConf">0</strong></div>
+<div class="stat"><span>Completadas</span><strong id="dDone">0</strong></div>
+<div class="stat"><span>Total cotizado (activas)</span><strong id="dValue">RD$0</strong></div>
+<div class="stat"><span>Cobrado</span><strong id="dPaid" style="color:var(--accent)">RD$0</strong></div>
+<div class="stat"><span>Por cobrar</span><strong id="dPending" style="color:var(--danger)">RD$0</strong></div>
+<div class="stat"><span>Pagado a empleados</span><strong id="dEmp">RD$0</strong></div>
+<div class="stat"><span>Margen aprox. (cobrado − empleados)</span><strong id="dMargin">RD$0</strong></div>
+</div>
+<div class="subhead">Próximos trabajos programados</div><div id="dUpcoming"></div>
+<div class="subhead">Pendientes por cobrar</div><div id="dDebtors"></div></section>
+</section>
+
 <section class="print-doc" id="quoteDoc"><div id="qdocBody"></div></section>
-<section class="card no-print"><h2>Guardar y entregar</h2><div class="actions"><button class="btn" id="printBtn">Imprimir / Guardar PDF</button><button class="btn secondary" id="saveBtn">Guardar en este iPhone</button><button class="btn secondary" id="loadBtn">Recuperar cotización</button><button class="btn danger" id="resetBtn">Nueva cotización</button></div><p class="hint">Los datos se guardan en el almacenamiento local del navegador de este dispositivo. Exporta o imprime en PDF para conservar una copia fuera del navegador.</p></section>
 <footer class="hint" style="text-align:center;padding:12px">Cotizador de Pintura · Cálculos en metros cuadrados · Moneda: peso dominicano</footer>
 </main>
 <div class="totalbar" id="totalbar"><div><div class="lbl">Total mano de obra</div><div class="net" id="barNet">Área neta: 0.00 m²</div></div><strong id="barTotal">RD$0</strong></div>
 <script>
-const $=id=>document.getElementById(id);let rooms=[],openings=[],ceilings=[],extras=[];const num=v=>Math.max(0,Number(v)||0);const factor=u=>u==='ft'?0.3048:u==='cm'?0.01:1;const money=n=>'RD$'+Math.round(n).toLocaleString('es-DO');const area=(a,b,u)=>num(a)*factor(u)*num(b)*factor(u);const fmt=n=>n.toLocaleString('es-DO',{minimumFractionDigits:2,maximumFractionDigits:2});
-$('date').value=new Date().toISOString().slice(0,10);
-function addRoom(name='') {rooms.push({name:name||`Área ${rooms.length+1}`,walls:[]});renderRooms();calc()}
-function renderRooms(){ $('rooms').innerHTML=rooms.map((r,i)=>`<div class="room"><div class="roomhead"><strong>${esc(r.name||'Área sin nombre')}</strong><button class="btn danger" onclick="removeRoom(${i})">Eliminar área</button></div><div class="field"><label>Nombre del área</label><input value="${esc(r.name)}" onchange="rooms[${i}].name=this.value;renderRooms()"></div><div class="subhead">Paredes</div>${r.walls.map((w,j)=>`<div class="wallrow"><div class="field"><label>Ancho horizontal</label><input type="number" min="0" step="any" value="${w.w}" placeholder="Ancho" onchange="rooms[${i}].walls[${j}].w=this.value;calc()"></div><div class="field"><label>Altura vertical</label><input type="number" min="0" step="any" value="${w.h}" placeholder="Alto" onchange="rooms[${i}].walls[${j}].h=this.value;calc()"></div><div class="field"><label>Unidad</label><select onchange="rooms[${i}].walls[${j}].u=this.value;calc()"><option value="m" ${w.u==='m'?'selected':''}>m</option><option value="ft" ${w.u==='ft'?'selected':''}>ft</option><option value="cm" ${w.u==='cm'?'selected':''}>cm</option></select></div><button class="btn danger" onclick="rooms[${i}].walls.splice(${j},1);renderRooms();calc()">×</button></div>`).join('')}<button class="btn secondary" onclick="rooms[${i}].walls.push({w:'',h:'',u:$('unit').value});renderRooms();calc()">+ Añadir pared</button><p class="hint">Subtotal: ${fmt(r.walls.reduce((s,w)=>s+area(w.w,w.h,w.u),0))} m²</p></div>`).join('')}
+'use strict';
+/* ================= UTILS ================= */
+const $=id=>document.getElementById(id);
+const num=v=>Math.max(0,Number(v)||0);
+const factor=u=>u==='ft'?0.3048:u==='cm'?0.01:1;
+const money=n=>'RD$'+Math.round(n).toLocaleString('es-DO');
+const fmt=n=>n.toLocaleString('es-DO',{minimumFractionDigits:2,maximumFractionDigits:2});
+const area=(a,b,u)=>num(a)*factor(u)*num(b)*factor(u);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const pad=n=>String(n).padStart(2,'0');
+const iso=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const dateEs=v=>{if(!v)return'';const p=v.split('-');return p[2]+'/'+p[1]+'/'+p[0]};
+const today=()=>iso(new Date());
+
+/* ================= DB ================= */
+let DB;
+try{DB=JSON.parse(localStorage.getItem('cp_db_v1')||'null')||null}catch(e){DB=null}
+if(!DB)DB={seq:0,quotes:[],employees:[],empPayments:[]};
+const saveDB=()=>localStorage.setItem('cp_db_v1',JSON.stringify(DB));
+function nextFolio(){DB.seq=(DB.seq||0)+1;return 'CT-'+new Date().getFullYear()+'-'+String(DB.seq).padStart(3,'0')}
+const findQuote=id=>DB.quotes.find(q=>q.id===id);
+
+/* ================= ESTADO DEL EDITOR ================= */
+let rooms=[],openings=[],ceilings=[],extras=[],currentId=null;
+
+/* ================= NAVEGACIÓN ================= */
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>showView(b.dataset.v));
+function showView(v){
+  document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+  ['cotizador','historial','agenda','pagos','empleados','resumen'].forEach(k=>$('view-'+k).hidden=(k!==v));
+  if(v==='historial')renderHistorial();
+  if(v==='agenda')renderAgenda();
+  if(v==='pagos')renderPagos();
+  if(v==='empleados')renderEmpleados();
+  if(v==='resumen')renderDash();
+}
+
+/* ================= CÁLCULOS ================= */
+function computeTotalsFor(r,o,c,e,p){
+  const gross=r.reduce((s,rr)=>s+rr.walls.reduce((a,w)=>a+area(w.w,w.h,w.u),0),0);
+  const deduct=o.reduce((s,x)=>s+area(x.w,x.h,x.u)*x.qty,0);
+  const net=Math.max(0,gross-deduct);
+  const ceila=c.reduce((s,x)=>s+area(x.w,x.l,x.u),0);
+  const doorCount=o.filter(x=>x.type==='Puerta').reduce((s,x)=>s+x.qty,0);
+  const windowCount=o.filter(x=>x.type==='Ventana').reduce((s,x)=>s+x.qty,0);
+  const wc=net*num(p.wall),cc=ceila*num(p.ceiling),oc=doorCount*num(p.door)+windowCount*num(p.window),ec=e.reduce((s,x)=>s+num(x.price),0);
+  return {gross,deduct,net,ceila,doorCount,windowCount,wc,cc,oc,ec,total:wc+cc+oc+ec};
+}
+function editorTotals(){return computeTotalsFor(rooms,openings,ceilings,extras,{wall:$('wallPrice').value,ceiling:$('ceilingPrice').value,door:$('doorPrice').value,window:$('windowPrice').value})}
+
+function calc(){
+  const t=editorTotals();
+  $('grossArea').textContent=fmt(t.gross)+' m²';$('deductArea').textContent=fmt(t.deduct)+' m²';$('netArea').textContent=fmt(t.net)+' m²';$('ceilingArea').textContent=fmt(t.ceila)+' m²';
+  $('wallCost').textContent=money(t.wc);$('ceilingCost').textContent=money(t.cc);$('openingCost').textContent=money(t.oc);$('extraCost').textContent=money(t.ec);
+  $('grandTotal').textContent=money(t.total);$('warning').textContent=t.deduct>t.gross?'Atención: el área descontada supera el área bruta de paredes. Revisa las medidas.':'';
+  $('barTotal').textContent=money(t.total);$('barNet').textContent='Área neta: '+fmt(t.net)+' m²';
+  calcSched(t);renderPayList();saveDraft();renderDoc();
+}
+
+/* ================= PLAN DE TRABAJO ================= */
+function schedDays(){
+  const t=editorTotals(),painters=Math.max(1,Math.floor(num($('schedPainters').value))||1),prod=num($('schedProd').value)||30;
+  const work=t.net+t.ceila;if(work<=0)return 0;
+  return Math.max(1,Math.ceil(work/(prod*painters)));
+}
+function schedEnd(){
+  const start=$('schedStart').value;if(!start)return'—';
+  let d=new Date(start+'T00:00:00'),left=schedDays(),guard=0;
+  while(left>0&&guard++<400){if(d.getDay()!==0||$('schedSun').checked)left--;if(left>0)d.setDate(d.getDate()+1)}
+  return dateEs(iso(d));
+}
+function calcSched(){
+  const t=editorTotals(),painters=Math.max(1,Math.floor(num($('schedPainters').value))||1),prod=num($('schedProd').value)||30,rate=num($('schedRate').value);
+  const days=schedDays();
+  $('schedDays').textContent=t.net+t.ceila>0?days+' días':'—';
+  $('schedEnd').textContent=schedEnd();
+  $('schedCost').textContent=money(days*painters*rate);
+}
+
+/* ================= PINTURA ================= */
+function calcPaint(){
+  const a=num($('paintArea').value),coats=Math.max(1,num($('paintCoats').value)),y=num($('paintYield').value)||30;
+  const gallons=a*coats/y,buckets=Math.ceil(gallons/5),liters=gallons*3.785;
+  $('paintGallons').textContent=a>0?fmt(Math.round(gallons*10)/10)+' gal':'—';
+  $('paintBuckets').textContent=a>0?buckets+' cubeta'+(buckets===1?'':'s'):'—';
+  $('paintLiters').textContent=a>0?fmt(Math.round(liters*10)/10)+' L':'—';
+  $('paintCost').textContent=money(buckets*num($('paintPrice').value));
+}
+$('paintFromQuote').onclick=()=>{const t=editorTotals();$('paintArea').value=Math.round((t.net+t.ceila)*100)/100;calcPaint()};
+['paintArea','paintCoats','paintYield','paintPrice'].forEach(id=>$(id).addEventListener('input',calcPaint));
+$('paintAddFee').onclick=()=>{const fee=num($('paintFee').value);if(!fee){alert('Escribe el importe que cobrarás por la consulta.');return}
+extras.push({name:'Consultoría de cálculo de pintura',price:fee});renderExtras();calc();$('paintFee').value='';alert('Consulta agregada como cargo a la cotización.')};
+
+/* ================= EDITOR: PAREDES ================= */
+function addRoom(name=''){rooms.push({name:name||('Área '+(rooms.length+1)),walls:[]});renderRooms();calc()}
+function renderRooms(){$('rooms').innerHTML=rooms.map((r,i)=>`<div class="room"><div class="roomhead"><strong>${esc(r.name||'Área sin nombre')}</strong><button class="btn danger" onclick="removeRoom(${i})">Eliminar área</button></div><div class="field"><label>Nombre del área</label><input value="${esc(r.name)}" onchange="rooms[${i}].name=this.value;renderRooms();calc()"></div><div class="subhead">Paredes</div>${r.walls.map((w,j)=>`<div class="wallrow"><div class="field"><label>Ancho horizontal</label><input type="number" min="0" step="any" value="${w.w}" placeholder="Ancho" onchange="rooms[${i}].walls[${j}].w=this.value;calc()"></div><div class="field"><label>Altura vertical</label><input type="number" min="0" step="any" value="${w.h}" placeholder="Alto" onchange="rooms[${i}].walls[${j}].h=this.value;calc()"></div><div class="field"><label>Unidad</label><select onchange="rooms[${i}].walls[${j}].u=this.value;calc()"><option value="m" ${w.u==='m'?'selected':''}>m</option><option value="ft" ${w.u==='ft'?'selected':''}>ft</option><option value="cm" ${w.u==='cm'?'selected':''}>cm</option></select></div><button class="btn danger" onclick="rooms[${i}].walls.splice(${j},1);renderRooms();calc()">×</button></div>`).join('')}<button class="btn secondary" onclick="rooms[${i}].walls.push({w:'',h:'',u:$('unit').value});renderRooms();calc()">+ Añadir pared</button><p class="hint">Subtotal: ${fmt(r.walls.reduce((s,w)=>s+area(w.w,w.h,w.u),0))} m²</p></div>`).join('')}
 function removeRoom(i){rooms.splice(i,1);renderRooms();calc()}
 function renderOpenings(){$('openingsList').innerHTML=openings.map((o,i)=>`<div class="metric"><span>${esc(o.type)} · ${o.qty} × ${fmt(area(o.w,o.h,o.u))} m² = ${fmt(area(o.w,o.h,o.u)*o.qty)} m²</span><button class="btn danger" onclick="openings.splice(${i},1);renderOpenings();calc()">Quitar</button></div>`).join('')}
 function renderCeilings(){$('ceilingsList').innerHTML=ceilings.map((c,i)=>`<div class="metric"><span>${esc(c.name)} · ${fmt(area(c.w,c.l,c.u))} m²</span><button class="btn danger" onclick="ceilings.splice(${i},1);renderCeilings();calc()">Quitar</button></div>`).join('')}
 function renderExtras(){$('extrasList').innerHTML=extras.map((e,i)=>`<div class="metric"><span>${esc(e.name)} · ${money(e.price)}</span><button class="btn danger" onclick="extras.splice(${i},1);renderExtras();calc()">Quitar</button></div>`).join('')}
-function calc(){let gross=rooms.reduce((s,r)=>s+r.walls.reduce((a,w)=>a+area(w.w,w.h,w.u),0),0),deduct=openings.reduce((s,o)=>s+area(o.w,o.h,o.u)*o.qty,0),net=Math.max(0,gross-deduct),ceil=ceilings.reduce((s,c)=>s+area(c.w,c.l,c.u),0),doorCount=openings.filter(o=>o.type==='Puerta').reduce((s,o)=>s+o.qty,0),windowCount=openings.filter(o=>o.type==='Ventana').reduce((s,o)=>s+o.qty,0);let wc=net*num($('wallPrice').value),cc=ceil*num($('ceilingPrice').value),oc=doorCount*num($('doorPrice').value)+windowCount*num($('windowPrice').value),ec=extras.reduce((s,e)=>s+num(e.price),0),total=wc+cc+oc+ec;$('grossArea').textContent=fmt(gross)+' m²';$('deductArea').textContent=fmt(deduct)+' m²';$('netArea').textContent=fmt(net)+' m²';$('ceilingArea').textContent=fmt(ceil)+' m²';$('wallCost').textContent=money(wc);$('ceilingCost').textContent=money(cc);$('openingCost').textContent=money(oc);$('extraCost').textContent=money(ec);$('grandTotal').textContent=money(total);$('warning').textContent=deduct>gross?'Atención: el área descontada supera el área bruta de paredes. Revisa las medidas.':'';$('barTotal').textContent=money(total);$('barNet').textContent='Área neta: '+fmt(net)+' m²';renderDoc();}
-function dateEs(v){if(!v)return'';const p=v.split('-');return `${p[2]}/${p[1]}/${p[0]}`}
-function renderDoc(){const gross=rooms.reduce((s,r)=>s+r.walls.reduce((a,w)=>a+area(w.w,w.h,w.u),0),0),deduct=openings.reduce((s,o)=>s+area(o.w,o.h,o.u)*o.qty,0),net=Math.max(0,gross-deduct),ceil=ceilings.reduce((s,c)=>s+area(c.w,c.l,c.u),0),wp=num($('wallPrice').value),cp=num($('ceilingPrice').value),dp=num($('doorPrice').value),wip=num($('windowPrice').value),doorCount=openings.filter(o=>o.type==='Puerta').reduce((s,o)=>s+o.qty,0),windowCount=openings.filter(o=>o.type==='Ventana').reduce((s,o)=>s+o.qty,0),wc=net*wp,cc=ceil*cp,oc=doorCount*dp+windowCount*wip,ec=extras.reduce((s,e)=>s+num(e.price),0),total=wc+cc+oc+ec;
-const wallsHtml=rooms.map(r=>{const sub=r.walls.reduce((s,w)=>s+area(w.w,w.h,w.u),0);return `<tr><td colspan="5" class="grp">${esc(r.name||'Área sin nombre')} — subtotal ${fmt(sub)} m²</td></tr>`+(r.walls.length?r.walls.map((w,j)=>`<tr><td>&nbsp;&nbsp;Pared ${j+1}</td><td>${fmt(num(w.w))}</td><td>${fmt(num(w.h))}</td><td>${esc(w.u)}</td><td class="r">${fmt(area(w.w,w.h,w.u))}</td></tr>`).join(''):'<tr><td colspan="5" class="muted">Sin paredes registradas.</td></tr>')}).join('');
-const openHtml=openings.length?openings.map(o=>`<tr><td>${esc(o.type)}</td><td>${fmt(num(o.w))} × ${fmt(num(o.h))} ${esc(o.u)}</td><td>${o.qty}</td><td class="r">− ${fmt(area(o.w,o.h,o.u)*o.qty)}</td></tr>`).join(''):'<tr><td colspan="4" class="muted">Ninguna registrada.</td></tr>';
-const ceilHtml=ceilings.length?ceilings.map(c=>`<tr><td>${esc(c.name)}</td><td>${fmt(num(c.w))} ${esc(c.u)}</td><td>${fmt(num(c.l))} ${esc(c.u)}</td><td class="r">${fmt(area(c.w,c.l,c.u))}</td></tr>`).join(''):'<tr><td colspan="4" class="muted">Ninguno registrado.</td></tr>';
-const extraHtml=extras.length?extras.map(e=>`<tr><td>${esc(e.name)}</td><td class="r">${money(e.price)}</td></tr>`).join(''):'<tr><td class="muted">Ninguno.</td><td class="r">RD$0</td></tr>';
-$('qdocBody').innerHTML=`<div class="qh"><div class="qh-title">Cotización de mano de obra · Pintura</div><div class="qh-sub">${esc($('project').value||'Pintura de vivienda')} — se cotiza únicamente la mano de obra</div></div>
+
+/* ================= GUARDADO AUTOMÁTICO ================= */
+function state(){return {client:$('client').value,location:$('location').value,project:$('project').value,date:$('date').value,unit:$('unit').value,rooms,openings,ceilings,extras,prices:{wall:$('wallPrice').value,ceiling:$('ceilingPrice').value,door:$('doorPrice').value,window:$('windowPrice').value}}}
+function draft(){const s=state();s.currentId=currentId;
+s.sched={start:$('schedStart').value,painters:$('schedPainters').value,prod:$('schedProd').value,rate:$('schedRate').value,sun:$('schedSun').checked};
+s.paint={area:$('paintArea').value,coats:$('paintCoats').value,yieldV:$('paintYield').value,price:$('paintPrice').value,fee:$('paintFee').value};return s}
+function saveDraft(){try{localStorage.setItem('cotizador_pintura_current',JSON.stringify(draft()))}catch(e){}}
+function restoreDraft(){
+  let raw=null;try{raw=JSON.parse(localStorage.getItem('cotizador_pintura_current')||'null')}catch(e){}
+  if(!raw)return false;
+  ['client','location','project','date','unit'].forEach(k=>{if(raw[k]!==undefined)$(k).value=raw[k]});
+  rooms=raw.rooms||[];openings=raw.openings||[];ceilings=raw.ceilings||[];extras=raw.extras||[];
+  $('wallPrice').value=raw.prices?.wall??100;$('ceilingPrice').value=raw.prices?.ceiling??85;$('doorPrice').value=raw.prices?.door??0;$('windowPrice').value=raw.prices?.window??0;
+  if(raw.sched){$('schedStart').value=raw.sched.start||'';$('schedPainters').value=raw.sched.painters||2;$('schedProd').value=raw.sched.prod||30;$('schedRate').value=raw.sched.rate||1500;$('schedSun').checked=!!raw.sched.sun}
+  if(raw.paint){$('paintArea').value=raw.paint.area||'';$('paintCoats').value=raw.paint.coats||2;$('paintYield').value=raw.paint.yieldV||30;$('paintPrice').value=raw.paint.price||'';$('paintFee').value=raw.paint.fee||''}
+  if(raw.currentId&&findQuote(raw.currentId)){loadQuoteIntoEditor(findQuote(raw.currentId),true);return true}
+  currentId=null;return true;
+}
+
+/* ================= GUARDAR COTIZACIÓN ================= */
+$('saveQuoteBtn').onclick=()=>{
+  const s=state();
+  if(!s.client.trim()){alert('Escribe el nombre del cliente para guardar la cotización.');return}
+  let q=currentId?findQuote(currentId):null;
+  if(!q){q={id:uid(),folio:nextFolio(),createdAt:Date.now(),status:'borrador',payments:[]};DB.quotes.push(q);currentId=q.id}
+  q.client=s.client;q.location=s.location;q.project=s.project;q.date=s.date;
+  q.rooms=s.rooms;q.openings=s.openings;q.ceilings=s.ceilings;q.extras=s.extras;q.prices=s.prices;
+  q.totals=computeTotalsFor(s.rooms,s.openings,s.ceilings,s.extras,s.prices);
+  q.schedule={start:$('schedStart').value,painters:Math.max(1,Math.floor(num($('schedPainters').value))||1),prod:num($('schedProd').value)||30,rate:num($('schedRate').value),sun:$('schedSun').checked,days:schedDays()};
+  q.paid=q.payments.reduce((a,p)=>a+num(p.amount),0);
+  saveDB();showCurrentInfo();renderPayList();saveDraft();alert('Cotización '+q.folio+' guardada en el historial.');
+};
+function showCurrentInfo(){const q=currentId?findQuote(currentId):null;$('currentInfo').hidden=!q;$('cardPayments').hidden=!q;if(q){$('qFolio').value=q.folio;$('qStatus').value=q.status||'borrador'}}
+function setStatus(v){const q=currentId?findQuote(currentId):null;if(!q)return;q.status=v;saveDB()}
+function setQuoteStatus(id,v){const q=findQuote(id);if(!q)return;q.status=v;saveDB();renderHistorial();renderDash()}
+function delQuote(id){const q=findQuote(id);if(!q)return;if(!confirm('¿Eliminar '+q.folio+' ('+q.client+')? Los pagos registrados se perderán del registro.'))return;DB.quotes=DB.quotes.filter(x=>x.id!==id);saveDB();if(currentId===id){currentId=null;showCurrentInfo()}renderHistorial();renderDash();renderPagos()}
+
+/* ================= PAGOS DEL TRABAJO ACTUAL ================= */
+$('addPay').onclick=()=>{
+  const q=currentId?findQuote(currentId):null;if(!q)return;
+  const amt=num($('payAmt').value);if(!amt){alert('Escribe el importe del pago.');return}
+  q.payments.push({id:uid(),date:$('payDate').value||today(),amount:amt,method:$('payMethod').value,note:$('payNote').value.trim()});
+  q.paid=q.payments.reduce((a,p)=>a+num(p.amount),0);saveDB();
+  $('payAmt').value='';$('payNote').value='';renderPayList();
+};
+function delPay(i){const q=currentId?findQuote(currentId):null;if(!q)return;q.payments.splice(i,1);q.paid=q.payments.reduce((a,p)=>a+num(p.amount),0);saveDB();renderPayList()}
+function renderPayList(){
+  const q=currentId?findQuote(currentId):null;if(!q){return}
+  const t=computeTotalsFor(q.rooms||[],q.openings||[],q.ceilings||[],q.extras||[],q.prices||{});
+  const paid=q.payments.reduce((a,p)=>a+num(p.amount),0);
+  $('payTotal').textContent=money(t.total);$('payPaid').textContent=money(paid);$('payPending').textContent=money(Math.max(0,t.total-paid));
+  $('payList').innerHTML=q.payments.map((p,i)=>`<div class="metric"><span>${dateEs(p.date)} · ${esc(p.method)}${p.note?' · '+esc(p.note):''}</span><span><strong>${money(p.amount)}</strong> <button class="btn danger" onclick="delPay(${i})">✕</button></span></div>`).join('');
+}
+
+/* ================= CARGAR COTIZACIÓN AL EDITOR ================= */
+function loadQuoteIntoEditor(q,keepView){
+  currentId=q.id;
+  $('client').value=q.client||'';$('location').value=q.location||'';$('project').value=q.project||'Pintura de vivienda';$('date').value=q.date||today();
+  rooms=JSON.parse(JSON.stringify(q.rooms||[]));openings=JSON.parse(JSON.stringify(q.openings||[]));ceilings=JSON.parse(JSON.stringify(q.ceilings||[]));extras=JSON.parse(JSON.stringify(q.extras||[]));
+  $('wallPrice').value=q.prices?.wall??100;$('ceilingPrice').value=q.prices?.ceiling??85;$('doorPrice').value=q.prices?.door??0;$('windowPrice').value=q.prices?.window??0;
+  const sc=q.schedule||{};$('schedStart').value=sc.start||'';$('schedPainters').value=sc.painters||2;$('schedProd').value=sc.prod||30;$('schedRate').value=sc.rate||1500;$('schedSun').checked=!!sc.sun;
+  showCurrentInfo();renderRooms();renderOpenings();renderCeilings();renderExtras();calc();
+  if(!keepView)showView('cotizador');
+}
+
+/* ================= HISTORIAL ================= */
+function renderHistorial(){
+  const f=$('histFilter').value,search=$('histSearch').value.trim().toLowerCase();
+  let list=DB.quotes.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||'')||(b.createdAt||0)-(a.createdAt||0));
+  if(f)list=list.filter(q=>q.status===f);
+  if(search)list=list.filter(q=>(q.client||'').toLowerCase().includes(search)||(q.location||'').toLowerCase().includes(search)||(q.folio||'').includes(search.toUpperCase()));
+  $('histList').innerHTML=list.length?list.map(q=>{
+    const paid=(q.payments||[]).reduce((a,p)=>a+num(p.amount),0);
+    const tot=q.totals?.total||0;
+    return `<div class="qitem"><div class="qh2"><div><strong>${esc(q.folio)} · ${esc(q.client||'—')}</strong><div class="sub">${esc(q.location||'')} · ${dateEs(q.date)} · ${esc(q.project||'')}</div></div><span class="badge ${esc(q.status)}">${esc(q.status)}</span></div>
+    <div class="sub">Total: <strong>${money(tot)}</strong> · Pagado: ${money(paid)} · Pendiente: ${money(Math.max(0,tot-paid))}${q.schedule&&q.schedule.start?' · Agenda: '+dateEs(q.schedule.start)+' ('+(q.schedule.days||0)+' días)':''}</div>
+    <div class="qa"><select onchange="setQuoteStatus('${q.id}',this.value)"><option value="borrador" ${q.status==='borrador'?'selected':''}>Borrador</option><option value="confirmada" ${q.status==='confirmada'?'selected':''}>Confirmada</option><option value="completada" ${q.status==='completada'?'selected':''}>Completada</option><option value="cancelada" ${q.status==='cancelada'?'selected':''}>Cancelada</option></select>
+    <button class="btn secondary" onclick="openQuote('${q.id}')">Abrir</button>
+    <button class="btn secondary" onclick="printQuote('${q.id}')">PDF</button>
+    <button class="btn danger" onclick="delQuote('${q.id}')">Eliminar</button></div></div>`;
+  }).join(''):'<p class="hint">Aún no hay cotizaciones guardadas.</p>';
+}
+function openQuote(id){const q=findQuote(id);if(q)loadQuoteIntoEditor(q)}
+function printQuote(id){const q=findQuote(id);if(!q)return;loadQuoteIntoEditor(q,true);renderDoc();setTimeout(()=>window.print(),80)}
+
+/* ================= AGENDA ================= */
+let calY=new Date().getFullYear(),calM=new Date().getMonth();
+function calMove(n){calM+=n;if(calM<0){calM=11;calY--}if(calM>11){calM=0;calY++}renderAgenda()}
+function renderAgenda(){
+  $('calTitle').textContent=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'][calM]+' '+calY;
+  const evMap={};
+  DB.quotes.forEach(q=>{const sc=q.schedule||{};if(!sc.start||!sc.days)return;
+    let d=new Date(sc.start+'T00:00:00'),c=0,guard=0;
+    while(c<sc.days&&guard++<400){if(d.getFullYear()!==calY&&c===0&&d.getTime()<new Date(calY,calM,1).getTime()){};const k=iso(d);if(d.getDay()!==0||sc.sun){(evMap[k]=evMap[k]||[]).push(q.folio);c++}d.setDate(d.getDate()+1)}
+  });
+  let html='<div class="calgrid">'+['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'].map(d=>`<div class="dow">${d}</div>`).join('');
+  const first=new Date(calY,calM,1).getDay(),dim=new Date(calY,calM+1,0).getDate(),prevDim=new Date(calY,calM,0).getDate();
+  for(let i=first-1;i>=0;i--)html+=`<div class="cday dim">${prevDim-i}</div>`;
+  const td=today();
+  for(let d=1;d<=dim;d++){
+    const k=calY+'-'+pad(calM+1)+'-'+pad(d),evs=evMap[k]||[];
+    html+=`<div class="cday${k===td?' today':''}">${d}${evs.length?`<div class="ev">${evs.slice(0,3).map(()=>'<i></i>').join('')}</div>`:''}</div>`;
+  }
+  const trail=(7-((first+dim)%7))%7;
+  for(let d=1;d<=trail;d++)html+=`<div class="cday dim">${d}</div>`;
+  $('calGrid').innerHTML=html+'</div>';
+  const up=DB.quotes.filter(q=>q.schedule&&q.schedule.start&&q.status!=='cancelada').sort((a,b)=>(a.schedule.start||'').localeCompare(b.schedule.start||''));
+  $('agendaList').innerHTML=up.length?up.map(q=>`<div class="qitem"><div class="qh2"><div><strong>${esc(q.folio)} · ${esc(q.client||'—')}</strong><div class="sub">${dateEs(q.schedule.start)} → ${dateEs(schedEndOf(q))} · ${q.schedule.days||0} días · ${q.schedule.painters||1} pintor(es)</div></div><span class="badge ${esc(q.status)}">${esc(q.status)}</span></div></div>`).join(''):'<p class="hint">Sin trabajos programados. Programa desde el Cotizador (Plan de trabajo) y guarda la cotización.</p>';
+}
+function schedEndOf(q){
+  const sc=q.schedule||{};if(!sc.start||!sc.days)return sc.start||'';
+  let d=new Date(sc.start+'T00:00:00'),left=sc.days,guard=0;
+  while(left>0&&guard++<400){if(d.getDay()!==0||sc.sun)left--;if(left>0)d.setDate(d.getDate()+1)}
+  return iso(d);
+}
+
+/* ================= EMPLEADOS ================= */
+$('addEmp').onclick=()=>{
+  const name=$('empName').value.trim();if(!name){alert('Escribe el nombre del empleado.');return}
+  DB.employees.push({id:uid(),name,rate:num($('empRate').value),phone:$('empPhone').value.trim()});
+  saveDB();$('empName').value='';$('empPhone').value='';renderEmpleados();
+};
+function delEmp(id){const e=DB.employees.find(x=>x.id===id);if(!e)return;if(!confirm('¿Eliminar a '+e.name+'? Los pagos registrados quedarán sin empleado asignado.'))return;DB.employees=DB.employees.filter(x=>x.id!==id);saveDB();renderEmpleados();renderPagos()}
+function renderEmpleados(){
+  $('empList').innerHTML=DB.employees.length?DB.employees.map(e=>{
+    const paid=DB.empPayments.filter(p=>p.empId===e.id).reduce((a,p)=>a+num(p.amount),0);
+    return `<div class="qitem"><div class="qh2"><div><strong>${esc(e.name)}</strong><div class="sub">${money(e.rate)}/día${e.phone?' · '+esc(e.phone):''}</div></div><button class="btn danger" onclick="delEmp('${e.id}')">Eliminar</button></div><div class="sub">Pagado hasta hoy: <strong>${money(paid)}</strong></div></div>`;
+  }).join(''):'<p class="hint">Aún no hay empleados registrados.</p>';
+}
+
+/* ================= PAGOS (global) ================= */
+function renderPagos(){
+  // selects
+  $('colQuote').innerHTML=DB.quotes.filter(q=>q.status!=='cancelada').map(q=>`<option value="${q.id}">${esc(q.folio)} · ${esc(q.client||'—')} (pendiente ${money(Math.max(0,(q.totals?.total||0)-((q.payments||[]).reduce((a,p)=>a+num(p.amount),0))))})</option>`).join('')||'<option value="">— sin cotizaciones —</option>';
+  $('epEmp').innerHTML=DB.employees.map(e=>`<option value="${e.id}">${esc(e.name)}</option>`).join('')||'<option value="">— sin empleados —</option>';
+  $('epQuote').innerHTML='<option value="">— ninguno —</option>'+DB.quotes.map(q=>`<option value="${q.id}">${esc(q.folio)} · ${esc(q.client||'')}</option>`).join('');
+  $('colDate').value=$('colDate').value||today();$('epDate').value=$('epDate').value||today();
+  // listas
+  const cols=[];DB.quotes.forEach(q=>(q.payments||[]).forEach(p=>cols.push({...p,folio:q.folio,client:q.client,qid:q.id})));
+  cols.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  $('colTotal').textContent=money(cols.reduce((a,p)=>a+num(p.amount),0));
+  $('colList').innerHTML=cols.length?cols.slice(0,15).map((p,i)=>`<div class="metric"><span>${dateEs(p.date)} · <strong>${esc(p.folio)}</strong> · ${esc(p.client||'')} · ${esc(p.method)}${p.note?' · '+esc(p.note):''}</span><span><strong style="color:var(--accent)">${money(p.amount)}</strong> <button class="btn danger" onclick="delCol('${p.qid}','${p.id}')">✕</button></span></div>`).join(''):'<p class="hint">Sin cobros registrados.</p>';
+  const eps=DB.empPayments.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  $('epTotal').textContent=money(eps.reduce((a,p)=>a+num(p.amount),0));
+  $('epList').innerHTML=eps.length?eps.slice(0,15).map((p,i)=>{
+    const e=DB.employees.find(x=>x.id===p.empId),q=p.quoteId?findQuote(p.quoteId):null;
+    return `<div class="metric"><span>${dateEs(p.date)} · <strong>${esc(e?e.name:'—')}</strong>${q?' · '+esc(q.folio):''}${p.note?' · '+esc(p.note):''}</span><span><strong style="color:var(--danger)">${money(p.amount)}</strong> <button class="btn danger" onclick="delEp(${DB.empPayments.indexOf(p)})">✕</button></span></div>`;
+  }).join(''):'<p class="hint">Sin pagos a empleados.</p>';
+}
+$('addCol').onclick=()=>{
+  const q=findQuote($('colQuote').value);if(!q){alert('No hay cotización seleccionada. Guarda primero una cotización.');return}
+  const amt=num($('colAmt').value);if(!amt){alert('Escribe el importe del cobro.');return}
+  q.payments=q.payments||[];q.payments.push({id:uid(),date:$('colDate').value||today(),amount:amt,method:$('colMethod').value,note:$('colNote').value.trim()});
+  q.paid=q.payments.reduce((a,p)=>a+num(p.amount),0);saveDB();$('colAmt').value='';$('colNote').value='';renderPagos();renderPayList();
+};
+function delCol(qid,pid){const q=findQuote(qid);if(!q)return;q.payments=(q.payments||[]).filter(p=>p.id!==pid);q.paid=(q.payments||[]).reduce((a,p)=>a+num(p.amount),0);saveDB();renderPagos();renderPayList()}
+$('addEp').onclick=()=>{
+  const e=DB.employees.find(x=>x.id===$('epEmp').value);if(!e){alert('Registra primero un empleado en la pestaña Empleados.');return}
+  const amt=num($('epAmt').value);if(!amt){alert('Escribe el importe del pago.');return}
+  DB.empPayments.push({id:uid(),empId:e.id,quoteId:$('epQuote').value||'',date:$('epDate').value||today(),amount:amt,note:$('epNote').value.trim()});
+  saveDB();$('epAmt').value='';$('epNote').value='';renderPagos();renderEmpleados();
+};
+function delEp(i){DB.empPayments.splice(i,1);saveDB();renderPagos();renderEmpleados()}
+
+/* ================= DASHBOARD ================= */
+function renderDash(){
+  const act=DB.quotes.filter(q=>q.status!=='cancelada');
+  const conf=act.filter(q=>q.status==='confirmada'),done=act.filter(q=>q.status==='completada'),drafts=act.filter(q=>q.status==='borrador');
+  const sum=l=>l.reduce((a,q)=>a+(q.totals?.total||0),0);
+  const paidAll=act.reduce((a,q)=>a+(q.payments||[]).reduce((x,p)=>x+num(p.amount),0),0);
+  const owed=conf.concat(done).reduce((a,q)=>a+Math.max(0,(q.totals?.total||0)-(q.payments||[]).reduce((x,p)=>x+num(p.amount),0)),0);
+  const empPaid=DB.empPayments.reduce((a,p)=>a+num(p.amount),0);
+  $('dDraft').textContent=drafts.length;$('dConf').textContent=conf.length;$('dDone').textContent=done.length;
+  $('dValue').textContent=money(sum(act));$('dPaid').textContent=money(paidAll);$('dPending').textContent=money(owed);$('dEmp').textContent=money(empPaid);$('dMargin').textContent=money(paidAll-empPaid);
+  const t=today();
+  const up=DB.quotes.filter(q=>q.schedule&&q.schedule.start&&q.schedule.start>=t&&q.status!=='cancelada'&&q.status!=='borrador').sort((a,b)=>a.schedule.start.localeCompare(b.schedule.start));
+  $('dUpcoming').innerHTML=up.length?up.slice(0,5).map(q=>`<div class="qitem"><div class="qh2"><div><strong>${esc(q.folio)} · ${esc(q.client||'—')}</strong><div class="sub">${dateEs(q.schedule.start)} → ${dateEs(schedEndOf(q))} · ${q.schedule.days||0} días · ${q.schedule.painters||1} pintor(es) · ${money(q.totals?.total||0)}</div></div><span class="badge ${esc(q.status)}">${esc(q.status)}</span></div></div>`).join(''):'<p class="hint">Sin trabajos próximos. Confirma cotizaciones y programa su fecha de inicio.</p>';
+  const debt=conf.concat(done).filter(q=>Math.max(0,(q.totals?.total||0)-(q.payments||[]).reduce((x,p)=>x+num(p.amount),0))>0);
+  $('dDebtors').innerHTML=debt.length?debt.map(q=>{const paid=(q.payments||[]).reduce((x,p)=>x+num(p.amount),0);return `<div class="qitem"><div class="qh2"><div><strong>${esc(q.folio)} · ${esc(q.client||'—')}</strong><div class="sub">${esc(q.location||'')} · total ${money(q.totals?.total||0)} · pagado ${money(paid)}</div></div><strong style="color:var(--danger)">${money(Math.max(0,(q.totals?.total||0)-paid))}</strong></div></div>`}).join(''):'<p class="hint">Todo cobrado al día. ✔</p>';
+}
+
+/* ================= DOCUMENTO PDF ================= */
+function renderDoc(){
+  const s=state(),t=computeTotalsFor(s.rooms,s.openings,s.ceilings,s.extras,s.prices),q=currentId?findQuote(currentId):null;
+  const wallsHtml=rooms.map(r=>{const sub=r.walls.reduce((a,w)=>a+area(w.w,w.h,w.u),0);return `<tr><td colspan="5" class="grp">${esc(r.name||'Área sin nombre')} — subtotal ${fmt(sub)} m²</td></tr>`+(r.walls.length?r.walls.map((w,j)=>`<tr><td>&nbsp;&nbsp;Pared ${j+1}</td><td>${fmt(num(w.w))}</td><td>${fmt(num(w.h))}</td><td>${esc(w.u)}</td><td class="r">${fmt(area(w.w,w.h,w.u))}</td></tr>`).join(''):'<tr><td colspan="5" class="muted">Sin paredes registradas.</td></tr>')}).join('');
+  const openHtml=openings.length?openings.map(o=>`<tr><td>${esc(o.type)}</td><td>${fmt(num(o.w))} × ${fmt(num(o.h))} ${esc(o.u)}</td><td>${o.qty}</td><td class="r">− ${fmt(area(o.w,o.h,o.u)*o.qty)}</td></tr>`).join(''):'<tr><td colspan="4" class="muted">Ninguna registrada.</td></tr>';
+  const ceilHtml=ceilings.length?ceilings.map(c=>`<tr><td>${esc(c.name)}</td><td>${fmt(num(c.w))} ${esc(c.u)}</td><td>${fmt(num(c.l))} ${esc(c.u)}</td><td class="r">${fmt(area(c.w,c.l,c.u))}</td></tr>`).join(''):'<tr><td colspan="4" class="muted">Ninguno registrado.</td></tr>';
+  const extraHtml=extras.length?extras.map(e=>`<tr><td>${esc(e.name)}</td><td class="r">${money(e.price)}</td></tr>`).join(''):'<tr><td class="muted">Ninguno.</td><td class="r">RD$0</td></tr>';
+  const sc=q?q.schedule||{}:{},paid=q?(q.payments||[]).reduce((a,p)=>a+num(p.amount),0):0;
+  const schedLine=sc.start?`${dateEs(sc.start)} → ${dateEs(schedEndOf(q))} · ${sc.days||schedDays()} días laborables · ${sc.painters||1} pintor(es)`:'No programado';
+  $('qdocBody').innerHTML=`<div class="qh"><div class="qh-title">Cotización de mano de obra · Pintura${q?' · '+esc(q.folio):''}</div><div class="qh-sub">${esc($('project').value||'Pintura de vivienda')} — se cotiza únicamente la mano de obra${q?' · Estado: '+esc(q.status):''}</div></div>
 <table class="meta"><tr><td><strong>Cliente:</strong> ${esc($('client').value||'—')}</td><td><strong>Ubicación:</strong> ${esc($('location').value||'—')}</td></tr><tr><td><strong>Proyecto:</strong> ${esc($('project').value||'—')}</td><td><strong>Fecha:</strong> ${dateEs($('date').value)}</td></tr></table>
 <div class="qs">1. Medición de paredes por área</div><table><thead><tr><th>Área / Pared</th><th>Ancho</th><th>Alto</th><th>Unidad</th><th class="r">Superficie (m²)</th></tr></thead><tbody>${wallsHtml}</tbody></table>
 <div class="qs">2. Puertas y ventanas descontadas</div><table><thead><tr><th>Tipo</th><th>Medidas</th><th>Cant.</th><th class="r">Área descontada (m²)</th></tr></thead><tbody>${openHtml}</tbody></table>
 <div class="qs">3. Techos</div><table><thead><tr><th>Techo</th><th>Ancho</th><th>Largo</th><th class="r">Superficie (m²)</th></tr></thead><tbody>${ceilHtml}</tbody></table>
 <div class="qs">4. Otros trabajos / cargos</div><table><tbody>${extraHtml}</tbody></table>
-<div class="qs">5. Resumen y totales</div><table><tbody>
-<tr><td>Área bruta de paredes</td><td class="r">${fmt(gross)} m²</td></tr>
-<tr><td>Menos aberturas descontadas</td><td class="r">− ${fmt(deduct)} m²</td></tr>
-<tr class="b"><td>Área neta de paredes × RD$${fmt(wp)}/m²</td><td class="r">${money(wc)}</td></tr>
-<tr class="b"><td>Techos: ${fmt(ceil)} m² × RD$${fmt(cp)}/m²</td><td class="r">${money(cc)}</td></tr>
-<tr><td>Puertas y ventanas (adicional opcional)</td><td class="r">${money(oc)}</td></tr>
-<tr><td>Otros cargos</td><td class="r">${money(ec)}</td></tr>
-<tr class="grand"><td>TOTAL MANO DE OBRA</td><td class="r">${money(total)}</td></tr>
+<div class="qs">5. Plan de trabajo</div><table><tbody><tr><td>Duración estimada y equipo</td><td class="r">${esc(schedLine)}</td></tr></tbody></table>
+<div class="qs">6. Resumen y totales</div><table><tbody>
+<tr><td>Área bruta de paredes</td><td class="r">${fmt(t.gross)} m²</td></tr>
+<tr><td>Menos aberturas descontadas</td><td class="r">− ${fmt(t.deduct)} m²</td></tr>
+<tr class="b"><td>Área neta de paredes × RD$${fmt(num(s.prices.wall))}/m²</td><td class="r">${money(t.wc)}</td></tr>
+<tr class="b"><td>Techos: ${fmt(t.ceila)} m² × RD$${fmt(num(s.prices.ceiling))}/m²</td><td class="r">${money(t.cc)}</td></tr>
+<tr><td>Puertas y ventanas (adicional opcional)</td><td class="r">${money(t.oc)}</td></tr>
+<tr><td>Otros cargos</td><td class="r">${money(t.ec)}</td></tr>
+<tr class="grand"><td>TOTAL MANO DE OBRA</td><td class="r">${money(t.total)}</td></tr>
+${q?`<tr><td>Pagos recibidos</td><td class="r">${money(paid)}</td></tr><tr><td>Saldo pendiente</td><td class="r">${money(Math.max(0,t.total-paid))}</td></tr>`:''}
 </tbody></table>
 <p class="note">Nota: los materiales son suministrados por el cliente. Medidas tomadas in situ con cinta métrica; conversiones de pies/centímetros a metros calculadas automáticamente.</p>
-<div class="sigs"><div><div class="line"></div><strong>Aceptación del cliente</strong><br>${esc($('client').value||'Nombre y firma')}</div><div><div class="line"></div><strong>El cotizador</strong><br>Fecha: ${dateEs($('date').value)}</div></div>`}
-function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-$('addRoom').onclick=()=>{let n=$('roomName').value.trim();addRoom(n);$('roomName').value=''};
-$('addOpening').onclick=()=>{let w=num($('openingW').value),h=num($('openingH').value),q=Math.max(1,Math.floor(num($('openingQty').value)));if(!w||!h){alert('Introduce el ancho y el alto de la abertura.');return}openings.push({type:$('openingType').value,u:$('openingUnit').value,w,h,qty:q});renderOpenings();calc();$('openingW').value='';$('openingH').value='';$('openingQty').value=1};
-$('addCeiling').onclick=()=>{let w=num($('ceilingW').value),l=num($('ceilingL').value);if(!w||!l){alert('Introduce el ancho y el largo del techo.');return}ceilings.push({name:$('ceilingName').value.trim()||`Techo ${ceilings.length+1}`,u:$('ceilingUnit').value,w,l});renderCeilings();calc();$('ceilingW').value='';$('ceilingL').value='';$('ceilingName').value=''};
-$('addExtra').onclick=()=>{let name=$('extraName').value.trim(),price=num($('extraPrice').value);if(!name||!price){alert('Introduce una descripción y un importe.');return}extras.push({name,price});renderExtras();calc();$('extraName').value='';$('extraPrice').value=''};
-['wallPrice','ceilingPrice','doorPrice','windowPrice'].forEach(id=>$(id).addEventListener('input',calc));$('printBtn').onclick=()=>{renderDoc();setTimeout(()=>window.print(),60)};
-function state(){return {client:$('client').value,location:$('location').value,project:$('project').value,date:$('date').value,unit:$('unit').value,rooms,openings,ceilings,extras,prices:{wall:$('wallPrice').value,ceiling:$('ceilingPrice').value,door:$('doorPrice').value,window:$('windowPrice').value}}}
-$('saveBtn').onclick=()=>{localStorage.setItem('cotizador_pintura_current',JSON.stringify(state()));alert('Cotización guardada en este navegador.');};$('loadBtn').onclick=()=>{let raw=localStorage.getItem('cotizador_pintura_current');if(!raw){alert('No hay una cotización guardada en este navegador.');return}let s=JSON.parse(raw);['client','location','project','date','unit'].forEach(k=>$(k).value=s[k]??'');rooms=s.rooms||[];openings=s.openings||[];ceilings=s.ceilings||[];extras=s.extras||[];$('wallPrice').value=s.prices?.wall??100;$('ceilingPrice').value=s.prices?.ceiling??85;$('doorPrice').value=s.prices?.door??0;$('windowPrice').value=s.prices?.window??0;renderRooms();renderOpenings();renderCeilings();renderExtras();calc();alert('Cotización recuperada.');};$('resetBtn').onclick=()=>{if(!confirm('¿Empezar una cotización nueva? Guarda primero si necesitas conservar la actual.'))return;rooms=[];openings=[];ceilings=[];extras=[];['client','location'].forEach(k=>$(k).value='');$('project').value='Pintura de vivienda';$('date').value=new Date().toISOString().slice(0,10);renderRooms();renderOpenings();renderCeilings();renderExtras();calc()};
-addRoom('Sala');
+<div class="sigs"><div><div class="line"></div><strong>Aceptación del cliente</strong><br>${esc($('client').value||'Nombre y firma')}</div><div><div class="line"></div><strong>El cotizador</strong><br>Fecha: ${dateEs($('date').value)}</div></div>`;
+}
+
+/* ================= BOTONES ================= */
+$('addRoom').onclick=()=>{addRoom($('roomName').value.trim());$('roomName').value=''};
+$('addOpening').onclick=()=>{const w=num($('openingW').value),h=num($('openingH').value),qt=Math.max(1,Math.floor(num($('openingQty').value)));if(!w||!h){alert('Introduce el ancho y el alto de la abertura.');return}openings.push({type:$('openingType').value,u:$('openingUnit').value,w,h,qty:qt});renderOpenings();calc();$('openingW').value='';$('openingH').value='';$('openingQty').value=1};
+$('addCeiling').onclick=()=>{const w=num($('ceilingW').value),l=num($('ceilingL').value);if(!w||!l){alert('Introduce el ancho y el largo del techo.');return}ceilings.push({name:$('ceilingName').value.trim()||('Techo '+(ceilings.length+1)),u:$('ceilingUnit').value,w,l});renderCeilings();calc();$('ceilingW').value='';$('ceilingL').value='';$('ceilingName').value=''};
+$('addExtra').onclick=()=>{const name=$('extraName').value.trim(),price=num($('extraPrice').value);if(!name||!price){alert('Introduce una descripción y un importe.');return}extras.push({name,price});renderExtras();calc();$('extraName').value='';$('extraPrice').value=''};
+['wallPrice','ceilingPrice','doorPrice','windowPrice','schedPainters','schedProd','schedRate','schedStart','schedSun'].forEach(id=>$(id).addEventListener('input',calc));
+$('printBtn').onclick=()=>{renderDoc();setTimeout(()=>window.print(),60)};
+$('resetBtn').onclick=()=>{if(!confirm('¿Empezar una cotización nueva? Lo no guardado en el historial se perderá.'))return;rooms=[];openings=[];ceilings=[];extras=[];currentId=null;['client','location'].forEach(k=>$(k).value='');$('project').value='Pintura de vivienda';$('date').value=today();$('schedStart').value='';$('schedPainters').value=2;$('schedProd').value=30;$('schedRate').value=1500;$('schedSun').checked=false;showCurrentInfo();renderRooms();renderOpenings();renderCeilings();renderExtras();calc();showView('cotizador')};
+
+/* ================= INICIO ================= */
+$('date').value=today();$('schedStart').value=today();
+if(!restoreDraft()){addRoom('Sala')}else{showCurrentInfo();renderRooms();renderOpenings();renderCeilings();renderExtras();calc()}
+calcPaint();
 </script></body></html>
